@@ -75,8 +75,17 @@ test_base_extract_correlation_minimum_method.pyで、テストデータの解析
 負の値を扱う場合は、基底との掛け算が負の場合に最大値をとる処理が考えられますが、  
 あまり考察に影響がないと考えられる為、正の値で扱う事としてください。  
 
+# 実装
+- python  
+    - module  
+    python/analysis/base_extract_correlation_minimum_method.py 
+    - test(sample)
+    python/test_base_extract_correlation_minimum_method.py
+
+
 # 最後に
 なんとなく作ったので細かい事はこれからです。様々なデータにかけて傾向を見てみたいので、ご協力いただけるとうれしいです。
 ご連絡お待ちしています。  
 
 [click mail link(連絡先)](<mailto:yasuhara.wataru.personal.work@gmail.com>)
+
