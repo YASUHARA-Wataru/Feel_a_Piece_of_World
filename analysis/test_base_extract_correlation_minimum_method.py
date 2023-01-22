@@ -14,8 +14,8 @@ import base_extract_correlation_minimum_method as becmm
 
 
 # 1D data test
-test_csv_name = r"analysis\\test_data\\daily_views.csv"
-#test_csv_name = r"test_data\\daily_views_alias.csv"
+#test_csv_name = r"analysis\\test_data\\daily_views.csv"
+test_csv_name = r"analysis\\test_data\\daily_views_alias.csv"
 
 df = pd.read_csv(test_csv_name)
 value = df['views']
@@ -33,7 +33,7 @@ base_ana = becmm.any_base_analysis_1D(value, base)
 
 # embed for plot
 freq_nums_emb4plot = np.zeros_like(value,dtype='f')
-freq_nums_emb4plot[:freq_nums.shape[0]] = freq_nums
+freq_nums_emb4plot[1:freq_nums.shape[0]+1] = freq_nums
 base_ana_emb4plot = np.zeros_like(value,dtype='f')
 base_ana_emb4plot[:base_ana.shape[0]] = base_ana
 
@@ -52,7 +52,7 @@ ax[3].bar(date_diff,base_ana_emb4plot)
 plt.xticks(date_diff[::5])
 fig.autofmt_xdate()
 
-
+"""
 # 2D data test
 img_name = r"analysis\\test_data\\lena.jpg"
 #img_name = r"analysis\\test_data\\test_span_3.png"
@@ -88,5 +88,6 @@ ax[0][1].pcolor(continous,cmap='gray')
 ax[1][1].set_title('any base analysis')
 ax[1][1].pcolor(base_ana_emb4plot,cmap='gray')
 ax[1][1].invert_yaxis()
+"""
 
 plt.show()
