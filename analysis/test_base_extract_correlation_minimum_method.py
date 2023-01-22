@@ -54,8 +54,8 @@ fig.autofmt_xdate()
 
 
 # 2D data test
-#img_name = r"analysis\\test_data\\lena.jpg"
-img_name = r"analysis\\test_data\\test_span_3.png"
+img_name = r"analysis\\test_data\\lena.jpg"
+#img_name = r"analysis\\test_data\\test_span_3.png"
 #img_name = r"analysis\\test_data\\test_span_32.png"
 test_image = np.array(Image.open(img_name),dtype='f')
 
@@ -79,6 +79,7 @@ fig, ax = plt.subplots(2, 2, figsize=(5, 5),tight_layout=True)
 fig.suptitle("base_extract_correlation_minimum_method 2D analysis")
 ax[0][0].set_title('Data')
 ax[0][0].pcolor(test_image,cmap='gray')
+ax[0][0].invert_yaxis()
 ax[1][0].set_title('freq analysis')
 ax[1][0].pcolor(freq_nums,cmap='gray')
 ax[0][1].set_title('contious analysis')
@@ -86,5 +87,6 @@ ax[0][1].pcolor(continous,cmap='gray')
 # x is phase
 ax[1][1].set_title('any base analysis')
 ax[1][1].pcolor(base_ana_emb4plot,cmap='gray')
+ax[1][1].invert_yaxis()
 
 plt.show()

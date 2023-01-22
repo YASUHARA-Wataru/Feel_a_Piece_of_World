@@ -4,5 +4,5 @@
 The MIT License (MIT)
 
 """
-from analysis.base_extract_correlation_minimum_method.base_extract_correlation_minimum_method import *
+from base_extract_correlation_minimum_method.base_extract_correlation_minimum_method import *
 
