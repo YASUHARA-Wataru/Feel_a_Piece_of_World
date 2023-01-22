@@ -14,7 +14,7 @@ import base_extract_correlation_minimum_method as becmm
 
 
 # 1D data test
-test_csv_name = r"test_data\\daily_views.csv"
+test_csv_name = r"analysis\\test_data\\daily_views.csv"
 #test_csv_name = r"test_data\\daily_views_alias.csv"
 
 df = pd.read_csv(test_csv_name)
@@ -54,9 +54,9 @@ fig.autofmt_xdate()
 
 
 # 2D data test
-#img_name = r"test_data\\lena.jpg"
-img_name = r"test_data\\test_span_3.png"
-#img_name = r"test_data\\test_span_32.png"
+#img_name = r"analysis\\test_data\\lena.jpg"
+img_name = r"analysis\\test_data\\test_span_3.png"
+#img_name = r"analysis\\test_data\\test_span_32.png"
 test_image = np.array(Image.open(img_name),dtype='f')
 
 # functionn of test
