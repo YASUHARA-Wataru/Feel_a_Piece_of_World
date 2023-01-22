@@ -42,13 +42,6 @@ test_base_extract_correlation_minimum_method.pyで、テストデータの解析
 1次元の処理を拡張した関数。
 インデックスが事象の発生位置となる。 
 
-- 出力例  
-
-![基底抽出相関最小法_1D_output](https://user-images.githubusercontent.com/123277284/213916168-b9017767-66ae-4818-9dc9-3152c3f23145.png)
-
-![基底抽出相関最小法_2D_output](https://user-images.githubusercontent.com/123277284/213916338-f4979a2b-46a2-4952-ac4d-71ee66215410.png)
-
-
 # 基底抽出相関最小法について
 フーリエ変換変換のように事象の周期性を求めるために、発案した手法である。  
 数学的な厳密性はないが、波による周期性ではなく設定した間隔の頻度を計算する手法である。  
@@ -58,6 +51,12 @@ test_base_extract_correlation_minimum_method.pyで、テストデータの解析
 頻度解析では、基底を二つをおき、その二つの基底の間隔を一つずつ増やしていき、データの周期性を計算している。    
 連続性解析では、基底を連続でおき、基底の数を一つずつ増やしていき、データの連続性を計算している。  
 任意の基底解析では、任意の基底をおき、相関取得毎の最小値を位相毎に出力している。任意のパターンがどのタイミングで発生した検討できる。 
+
+- 出力例  
+
+![基底抽出相関最小法_1D_output](https://user-images.githubusercontent.com/123277284/213916168-b9017767-66ae-4818-9dc9-3152c3f23145.png)
+
+![基底抽出相関最小法_2D_output](https://user-images.githubusercontent.com/123277284/213916338-f4979a2b-46a2-4952-ac4d-71ee66215410.png)
 
 
 
