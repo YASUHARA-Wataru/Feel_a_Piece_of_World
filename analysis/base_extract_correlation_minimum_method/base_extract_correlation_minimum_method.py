@@ -193,6 +193,7 @@ def any_base_analysis_1D(data,base):
     ------
     Exception
         If Data is not 1D-array, raises error
+        If base contains negative value, raises error
 
     Returns
     -------
@@ -233,6 +234,7 @@ def any_base_analysis_2D(data,base):
     ------
     Exception
         If Data is not 2D-array, raises error
+        If base contains negative value, raises error
 
     Returns
     -------
