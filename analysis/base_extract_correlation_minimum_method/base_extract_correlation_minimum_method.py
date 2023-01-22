@@ -203,6 +203,9 @@ def any_base_analysis_1D(data,base):
     data = np.array(data)
     base = np.array(base)
 
+    if np.min(base) < 0:
+        raise Exception('base can\'t contain negative values.')
+ 
     if data.flatten().shape[0] != len(list(data)) :
         raise Exception('data is not 1D array.')
     else:
@@ -240,6 +243,9 @@ def any_base_analysis_2D(data,base):
     data = np.array(data)
     base = np.array(base)
 
+    if np.min(base) < 0:
+        raise Exception('base can\'t contain negative values.')
+ 
     if np.array(data.shape).shape[0] != 2:
         raise Exception('data is not 2D array.')
     else:
@@ -301,7 +307,7 @@ def main():
     base = np.array([[1,0,1,0],
                      [0,0,0,0],
                      [1,0,1,0],
-                     [0,0,0,0]])
+                     [0,0,0,1]])
     value[::2,::2] = 1
     np.savetxt('test.txt',value)
     cor_result = any_base_analysis_2D(value,base)
