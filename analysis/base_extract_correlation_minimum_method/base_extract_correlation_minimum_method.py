@@ -18,6 +18,7 @@ def freq_analysis_1D(data):
     ------
     Exception
         If Data is not 1D-array, raises error
+        If Data contains negative value, raises error
 
     Returns
     -------
@@ -26,6 +27,9 @@ def freq_analysis_1D(data):
 
     """
     data = np.array(data)
+
+    if np.min(data) < 0:
+        raise Exception('data contains negative.')
 
     if data.flatten().shape[0] != len(list(data)):
         raise Exception('data is not 1D array.')
@@ -57,6 +61,7 @@ def freq_analysis_2D(data):
     ------
     Exception
         If Data is not 2D-array, raises error
+        If Data contains negative value, raises error
 
     Returns
     -------
@@ -66,6 +71,9 @@ def freq_analysis_2D(data):
     """
 
     data = np.array(data)
+
+    if np.min(data) < 0:
+        raise Exception('data contains negative.')
 
     if np.array(data.shape).shape[0] != 2:
         raise Exception('data is not 2D array.')
@@ -113,6 +121,7 @@ def continuous_analisys_1D(data):
     ------
     Exception
         If Data is not 1D-array, raises error
+        If Data contains negative value, raises error
 
     Returns
     -------
@@ -120,6 +129,8 @@ def continuous_analisys_1D(data):
         continuous num.
 
     """
+    if np.min(data) < 0:
+        raise Exception('data contains negative.')
 
     data = np.array(data)
     if data.flatten().shape[0] != len(list(data)):
@@ -145,11 +156,13 @@ def continuous_analisys_2D(data):
     ----------
     data : 2D-array
         2D-array Data.
+        If Data contains negative value, raises error
 
     Raises
     ------
     Exception
         If Data is not 2D-array, raises error
+        If Data contains negative value, raises error
 
     Returns
     -------
@@ -158,6 +171,9 @@ def continuous_analisys_2D(data):
 
     """
     data = np.array(data)
+
+    if np.min(data) < 0:
+        raise Exception('data contains negative.')
 
     if np.array(data.shape).shape[0] != 2:
         raise Exception('data is not 2D array.')
@@ -193,6 +209,7 @@ def any_base_analysis_1D(data,base):
     ------
     Exception
         If Data is not 1D-array, raises error
+        If Data contains negative value, raises error
         If base contains negative value, raises error
 
     Returns
@@ -203,6 +220,9 @@ def any_base_analysis_1D(data,base):
     """
     data = np.array(data)
     base = np.array(base)
+
+    if np.min(data) < 0:
+        raise Exception('data contains negative.')
 
     if np.min(base) < 0:
         raise Exception('base can\'t contain negative values.')
@@ -234,6 +254,7 @@ def any_base_analysis_2D(data,base):
     ------
     Exception
         If Data is not 2D-array, raises error
+        If Data contains negative value, raises error
         If base contains negative value, raises error
 
     Returns
@@ -244,6 +265,9 @@ def any_base_analysis_2D(data,base):
     """
     data = np.array(data)
     base = np.array(base)
+
+    if np.min(data) < 0:
+        raise Exception('data contains negative.')
 
     if np.min(base) < 0:
         raise Exception('base can\'t contain negative values.')
