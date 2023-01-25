@@ -14,8 +14,8 @@ import analysis.base_extract_correlation_minimum_method as becmm
 
 
 # 1D data test
-test_csv_name = r"test_data\\daily_views.csv"
-#test_csv_name = r"test_data\\daily_views_alias.csv"
+#test_csv_name = r"test_data\\daily_views.csv"
+test_csv_name = r"test_data\\daily_views_alias.csv"
 
 df = pd.read_csv(test_csv_name)
 value = df['views']
@@ -46,11 +46,12 @@ ax[1].set_title('freq analysis')
 ax[1].bar(date_diff,freq_nums_emb4plot)
 ax[2].set_title('contious analysis')
 ax[2].bar(date_diff,continous)
-# x is init position
+# x is phase
 ax[3].set_title('any base analysis')
 ax[3].bar(date_diff,base_ana_emb4plot)
 plt.xticks(date_diff[::5])
 fig.autofmt_xdate()
+
 
 # 2D data test
 img_name = r"test_data\\lena.jpg"
@@ -83,9 +84,10 @@ ax[1][0].set_title('freq analysis')
 ax[1][0].pcolor(freq_nums,cmap='gray')
 ax[0][1].set_title('contious analysis')
 ax[0][1].pcolor(continous,cmap='gray')
-# x is init position
+# x is phase
 ax[1][1].set_title('any base analysis')
 ax[1][1].pcolor(base_ana_emb4plot,cmap='gray')
 ax[1][1].invert_yaxis()
+
 
 plt.show()
