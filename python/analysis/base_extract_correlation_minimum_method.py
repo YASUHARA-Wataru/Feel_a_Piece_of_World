@@ -33,21 +33,20 @@ def freq_analysis_1D(data):
 
     if data.flatten().shape[0] != len(list(data)):
         raise Exception('data is not 1D array.')
-    else:
 
-        data_num = data.shape[0]
-        max_freqs = int(data_num/2)+1
-        freq_nums = np.zeros(max_freqs-1,dtype='f')
-        
-        for freq in range(1,max_freqs):
-            for i in range(data_num-freq-1):
-                freq_nums[freq-1] += np.min([data[i],data[i+freq+1]])
-                
-        # normalize
-        bin_nums = np.arange(data_num-1,data_num-max_freqs,-1)
-        stan_freq_num = freq_nums/bin_nums
+    data_num = data.shape[0]
+    max_freqs = int(data_num/2)+1
+    freq_nums = np.zeros(max_freqs-1,dtype='f')
     
-        return stan_freq_num
+    for freq in range(1,max_freqs):
+        for i in range(data_num-freq-1):
+            freq_nums[freq-1] += np.min([data[i],data[i+freq+1]])
+            
+    # normalize
+    bin_nums = np.arange(data_num-1,data_num-max_freqs,-1)
+    stan_freq_num = freq_nums/bin_nums
+
+    return stan_freq_num
     
 
 def freq_analysis_2D(data):
@@ -77,38 +76,37 @@ def freq_analysis_2D(data):
 
     if np.array(data.shape).shape[0] != 2:
         raise Exception('data is not 2D array.')
-    else:
-        data_rank1 = data.shape[0]
-        data_rank2 = data.shape[1]
 
-        freqs_rank1 = int(data_rank1/2)+1
-        freqs_rank2 = int(data_rank2/2)+1
-        freq_nums = np.zeros((freqs_rank1,freqs_rank2),dtype='f')
-        
+    data_dim1 = data.shape[0]
+    data_dim2 = data.shape[1]
 
-        for freq1 in range(freqs_rank1):
-            for freq2 in range(freqs_rank2):
-                
-                for i in range(data_rank1-freq1-1):
-                    for j in range(data_rank2-freq2-1):
-                        interest1_data = data[i,j]
-                        interest2_data = data[i+freq1,j+freq2]
-                        interest3_data = data[i,j+freq2]
-                        interest4_data = data[i+freq1,j+freq2]
-                        interest_data = [interest1_data,
-                                         interest2_data,
-                                         interest3_data,
-                                         interest4_data]
-                        freq_nums[freq1,freq2] += np.min(interest_data)
-
-        # normalize
-        rank1_nums = np.arange(data_rank1,data_rank1-freqs_rank1,-1).reshape((freqs_rank1,1))
-        rank2_nums = np.arange(data_rank2,data_rank2-freqs_rank2,-1).reshape((1,freqs_rank2))
-        bin_nums = np.dot(rank1_nums,rank2_nums)
-            
-        stan_freq_num = freq_nums/bin_nums
+    freqs_rank1 = int(data_dim1/2)+1
+    freqs_rank2 = int(data_dim2/2)+1
+    freq_nums = np.zeros((freqs_rank1,freqs_rank2),dtype='f')
     
-        return stan_freq_num
+
+    for freq1 in range(freqs_rank1):
+        for freq2 in range(freqs_rank2):            
+            for i in range(data_dim1-freq1-1):
+                for j in range(data_dim2-freq2-1):
+                    interest1_data = data[i,j]
+                    interest2_data = data[i+freq1,j+freq2]
+                    interest3_data = data[i,j+freq2]
+                    interest4_data = data[i+freq1,j+freq2]
+                    interest_data = [interest1_data,
+                                        interest2_data,
+                                        interest3_data,
+                                        interest4_data]
+                    freq_nums[freq1,freq2] += np.min(interest_data)
+
+    # normalize
+    rank1_nums = np.arange(data_dim1,data_dim1-freqs_rank1,-1).reshape((freqs_rank1,1))
+    rank2_nums = np.arange(data_dim2,data_dim2-freqs_rank2,-1).reshape((1,freqs_rank2))
+    bin_nums = np.dot(rank1_nums,rank2_nums)
+        
+    stan_freq_num = freq_nums/bin_nums
+
+    return stan_freq_num
 
 def continuous_analisys_1D(data):
     """
@@ -129,26 +127,27 @@ def continuous_analisys_1D(data):
         continuous num.
 
     """
+    
     if np.min(data) < 0:
         raise Exception('data contains negative.')
 
     data = np.array(data)
     if data.flatten().shape[0] != len(list(data)):
         raise Exception('data is not 1D array.')
-    else:
-        data_num = data.shape[0]
-        continuous_num = np.zeros_like(data)
-        
-        for continuous in range(0,data_num):
-            for i in range(data_num-continuous):
-                continuous_num[continuous] += np.min(data[i:i+continuous+1])
-                
-    
-        # normalize
-        bin_nums = np.arange(data_num,0,-1)
-        stan_continuous_num = continuous_num/bin_nums
 
-        return stan_continuous_num
+    data_num = data.shape[0]
+    continuous_num = np.zeros_like(data)
+    
+    for continuous in range(0,data_num):
+        for i in range(data_num-continuous):
+            continuous_num[continuous] += np.min(data[i:i+continuous+1])
+            
+
+    # normalize
+    bin_nums = np.arange(data_num,0,-1)
+    stan_continuous_num = continuous_num/bin_nums
+
+    return stan_continuous_num
 
 def continuous_analisys_2D(data):
     """
@@ -177,24 +176,24 @@ def continuous_analisys_2D(data):
 
     if np.array(data.shape).shape[0] != 2:
         raise Exception('data is not 2D array.')
-    else:
-        data_rank1 = data.shape[0]
-        data_rank2 = data.shape[1]
-        continuous_num = np.zeros_like(data)
 
-        for continuous1 in range(0,data_rank1):
-            for continuous2 in range(0,data_rank2):
-                for i in range(data_rank1-continuous1):
-                    for j in range(data_rank2-continuous2):
-                        continuous_num[continuous1,continuous2] += np.min(data[i:i+continuous1+1,j:j+continuous2+1])
+    data_dim1 = data.shape[0]
+    data_dim2 = data.shape[1]
+    continuous_num = np.zeros_like(data)
 
-        # normalize
-        rank1_nums = np.arange(data_rank1,0,-1).reshape((data_rank1,1))
-        rank2_nums = np.arange(data_rank2,0,-1).reshape((1,data_rank2))
-        bin_nums = np.dot(rank1_nums,rank2_nums)
-        stan_continuous_num = continuous_num/bin_nums
+    for continuous1 in range(0,data_dim1):
+        for continuous2 in range(0,data_dim2):
+            for i in range(data_dim1-continuous1):
+                for j in range(data_dim2-continuous2):
+                    continuous_num[continuous1,continuous2] += np.min(data[i:i+continuous1+1,j:j+continuous2+1])
 
-        return stan_continuous_num
+    # normalize
+    rank1_nums = np.arange(data_dim1,0,-1).reshape((data_dim1,1))
+    rank2_nums = np.arange(data_dim2,0,-1).reshape((1,data_dim2))
+    bin_nums = np.dot(rank1_nums,rank2_nums)
+    stan_continuous_num = continuous_num/bin_nums
+
+    return stan_continuous_num
 
 def any_base_analysis_1D(data,base):
     """
@@ -211,6 +210,7 @@ def any_base_analysis_1D(data,base):
         If Data is not 1D-array, raises error
         If Data contains negative value, raises error
         If base contains negative value, raises error
+        If base is lager than Data, raises error
 
     Returns
     -------
@@ -229,17 +229,20 @@ def any_base_analysis_1D(data,base):
  
     if data.flatten().shape[0] != len(list(data)) :
         raise Exception('data is not 1D array.')
-    else:
-        data_num = data.shape[0]
-        base_num = base.shape[0]
+
+    data_num = data.shape[0]
+    base_num = base.shape[0]
+    
+    if data_num < base_num:
+        raise Exception('base is too large.')
+    
+    cor_result = np.zeros(data_num - base_num,dtype='f')
+    for i in range(data_num-base_num):
+        data_cut = data[i:i+base_num]
+        calc_index = base > 0
+        cor_result[i] = np.min(data_cut[calc_index]*base[calc_index])
         
-        cor_result = np.zeros(data_num - base_num,dtype='f')
-        for i in range(data_num-base_num):
-            data_cut = data[i:i+base_num]
-            calc_index = base > 0
-            cor_result[i] = np.min(data_cut[calc_index]*base[calc_index])
-            
-        return cor_result
+    return cor_result
             
 def any_base_analysis_2D(data,base):
     """
@@ -256,6 +259,7 @@ def any_base_analysis_2D(data,base):
         If Data is not 2D-array, raises error
         If Data contains negative value, raises error
         If base contains negative value, raises error
+        If base is lager than Data, raises error
 
     Returns
     -------
@@ -274,22 +278,27 @@ def any_base_analysis_2D(data,base):
  
     if np.array(data.shape).shape[0] != 2:
         raise Exception('data is not 2D array.')
-    else:
-        data_num_rank1 = data.shape[0]
-        data_num_rank2 = data.shape[1]
-        base_num_rank1 = base.shape[0]
-        base_num_rank2 = base.shape[1]
-        
-        cor_result = np.zeros((data_num_rank1 - base_num_rank1,data_num_rank2 - base_num_rank2),dtype='f')
-        for i in range(data_num_rank1-base_num_rank1):
-            for j in range(data_num_rank2-base_num_rank2):
-                data_cut = data[i:i+base_num_rank1,j:j+base_num_rank2]
-                calc_index = base > 0
-                cor_result[i,j] = np.min(data_cut[calc_index]*base[calc_index])
-            
-        return cor_result
-            
 
+    data_num_dim1 = data.shape[0]
+    data_num_dim2 = data.shape[1]
+    base_num_dim1 = base.shape[0]
+    base_num_dim2 = base.shape[1]
+    
+    if data_num_dim1 < base_num_dim1:
+        raise Exception('base Dim1 is too large.')
+    if data_num_dim2 < base_num_dim2:
+        raise Exception('base Dim2 is too large.')
+
+    
+    cor_result = np.zeros((data_num_dim1 - base_num_dim1,data_num_dim2 - base_num_dim2),dtype='f')
+    for i in range(data_num_dim1-base_num_dim1):
+        for j in range(data_num_dim2-base_num_dim2):
+            data_cut = data[i:i+base_num_dim1,j:j+base_num_dim2]
+            calc_index = base > 0
+            cor_result[i,j] = np.min(data_cut[calc_index]*base[calc_index])
+        
+    return cor_result
+        
 
 def main():
 
@@ -335,7 +344,6 @@ def main():
                      [1,0,1,0],
                      [0,0,0,1]])
     value[::2,::2] = 1
-    np.savetxt('test.txt',value)
     cor_result = any_base_analysis_2D(value,base)
     print('cor_result:' + str(cor_result))
 
