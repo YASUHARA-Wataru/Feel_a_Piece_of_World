@@ -299,6 +299,99 @@ def any_base_analysis_2D(data,base):
         
     return cor_result
         
+def any_base_co_ne_analysis_1D(data,base):
+    """
+    Parameters
+    ----------
+    data : TYPE
+        1D-array Data
+    base : TYPE
+        1D-array base
+
+    Raises
+    ------
+    Exception
+        If Data is not 1D-array, raises error
+        If Data contains negative value, raises error
+        If base contains negative value, raises error
+        If base is lager than Data, raises error
+
+    Returns
+    -------
+    cor_result : TYPE
+        DESCRIPTION.
+
+    """
+    data = np.array(data)
+    base = np.array(base)
+
+ 
+    if data.flatten().shape[0] != len(list(data)) :
+        raise Exception('data is not 1D array.')
+
+    data_num = data.shape[0]
+    base_num = base.shape[0]
+    
+    if data_num < base_num:
+        raise Exception('base is too large.')
+    
+    cor_result = np.zeros(data_num - base_num,dtype='f')
+    for i in range(data_num-base_num):
+        data_cut = data[i:i+base_num]
+        calc_index = base != 0 # maybe no problem using float
+        cor_result[i] = np.min(data_cut[calc_index]*base[calc_index])
+        
+    return cor_result
+            
+def any_base_co_ne_analysis_2D(data,base):
+    """
+    Parameters
+    ----------
+    data : TYPE
+        2D-array Data
+    base : TYPE
+        2D-array base
+
+    Raises
+    ------
+    Exception
+        If Data is not 2D-array, raises error
+        If Data contains negative value, raises error
+        If base contains negative value, raises error
+        If base is lager than Data, raises error
+
+    Returns
+    -------
+    cor_result : TYPE
+        cor_result
+
+    """
+    data = np.array(data)
+    base = np.array(base)
+ 
+    if np.array(data.shape).shape[0] != 2:
+        raise Exception('data is not 2D array.')
+
+    data_num_dim1 = data.shape[0]
+    data_num_dim2 = data.shape[1]
+    base_num_dim1 = base.shape[0]
+    base_num_dim2 = base.shape[1]
+    
+    if data_num_dim1 < base_num_dim1:
+        raise Exception('base Dim1 is too large.')
+    if data_num_dim2 < base_num_dim2:
+        raise Exception('base Dim2 is too large.')
+
+    
+    cor_result = np.zeros((data_num_dim1 - base_num_dim1,data_num_dim2 - base_num_dim2),dtype='f')
+    for i in range(data_num_dim1-base_num_dim1):
+        for j in range(data_num_dim2-base_num_dim2):
+            data_cut = data[i:i+base_num_dim1,j:j+base_num_dim2]
+            calc_index = base != 0 # maybe no problem using float
+            cor_result[i,j] = np.min(data_cut[calc_index]*base[calc_index])
+        
+    return cor_result
+
 
 def main():
 
@@ -336,15 +429,34 @@ def main():
     cor_result = any_base_analysis_1D(value,base)
     print('cor_result:' + str(cor_result))
 
-
     # test any_base_analysis_2D
     value = np.zeros((100,100))
     base = np.array([[1,0,1,0],
                      [0,0,0,0],
                      [1,0,1,0],
                      [0,0,0,1]])
-    value[::2,::2] = 1
+    value[:4,:4] = base
     cor_result = any_base_analysis_2D(value,base)
+    print('cor_result:' + str(cor_result))
+
+    # test any_base_analysis_1D
+    value = np.zeros(100)
+    base = np.array([1,0,0,-1,0,1])
+    value[:6] = base
+    print(value)
+    print(base)
+    cor_result = any_base_co_ne_analysis_1D(value,base)
+    np.savetxt('text1.txt',cor_result)
+    print('cor_result:' + str(cor_result))
+
+    # test any_base_analysis_2D
+    value = np.zeros((100,100))
+    base = np.array([[1,0,1,0],
+                     [0,0,0,0],
+                     [1,0,-1,0],
+                     [0,0,0,1]])
+    value[:4,:4] = base
+    cor_result = any_base_co_ne_analysis_2D(value,base)
     print('cor_result:' + str(cor_result))
 
 
