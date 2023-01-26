@@ -226,6 +226,9 @@ def any_base_analysis_1D_only_positive(data,base):
 
     if np.min(base) < 0:
         raise Exception('base can\'t contain negative values.')
+
+    if np.min(np.abs(base)[np.abs(base) > 0]) != 1:
+        raise Exception('base not zero value absolute min must be 1.')
  
     if data.flatten().shape[0] != len(list(data)) :
         raise Exception('data is not 1D array.')
@@ -275,7 +278,10 @@ def any_base_analysis_2D_only_positive(data,base):
 
     if np.min(base) < 0:
         raise Exception('base can\'t contain negative values.')
- 
+
+    if np.min(np.abs(base)[np.abs(base) > 0]) != 1:
+        raise Exception('base not zero value absolute min must be 1.')
+    
     if np.array(data.shape).shape[0] != 2:
         raise Exception('data is not 2D array.')
 
@@ -335,11 +341,17 @@ def any_base_analysis_1D(data,base):
     if data_num < base_num:
         raise Exception('base is too large.')
     
+    if np.min(np.abs(base)[np.abs(base) > 0]) != 1:
+        raise Exception('base not zero value absolute min must be 1.')
+    
     cor_result = np.zeros(data_num - base_num,dtype='f')
     for i in range(data_num-base_num):
         data_cut = data[i:i+base_num]
         calc_index = base != 0 # maybe no problem using float
-        cor_result[i] = np.min(data_cut[calc_index]*base[calc_index])
+        temp_cor = data_cut[calc_index]*base[calc_index]
+        ex_cor = temp_cor[temp_cor>=0]
+        if len(ex_cor) > 0:
+            cor_result[i] = np.min(ex_cor)
         
     return cor_result
             
@@ -382,13 +394,18 @@ def any_base_analysis_2D(data,base):
     if data_num_dim2 < base_num_dim2:
         raise Exception('base Dim2 is too large.')
 
+    if np.min(np.abs(base)[np.abs(base) > 0]) != 1:
+        raise Exception('base not zero value absolute min must be 1.')
     
     cor_result = np.zeros((data_num_dim1 - base_num_dim1,data_num_dim2 - base_num_dim2),dtype='f')
     for i in range(data_num_dim1-base_num_dim1):
         for j in range(data_num_dim2-base_num_dim2):
             data_cut = data[i:i+base_num_dim1,j:j+base_num_dim2]
             calc_index = base != 0 # maybe no problem using float
-            cor_result[i,j] = np.min(data_cut[calc_index]*base[calc_index])
+            temp_cor = data_cut[calc_index]*base[calc_index]
+            ex_cor = temp_cor[temp_cor>=0]
+            if len(ex_cor) > 0:
+                cor_result[i,j] = np.min(ex_cor)
         
     return cor_result
 
@@ -453,11 +470,15 @@ def main():
     value = np.zeros((100,100))
     base = np.array([[1,0,1,0],
                      [0,0,0,0],
-                     [1,0,-1,0],
+                     [1,0,-5,0],
                      [0,0,0,1]])
     value[:4,:4] = base
+    value[2:6,2:6] += base
+    value[1:5,3:7] += base
+    print(value)
+    print(base)
     cor_result = any_base_analysis_2D(value,base)
-    print('cor_result:' + str(cor_result))
+    print('cor_result:\n' + str(cor_result))
 
 
 if __name__ == "__main__":
