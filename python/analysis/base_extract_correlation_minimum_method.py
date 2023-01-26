@@ -2,7 +2,7 @@
 """
 @author: YASUHARA WATARU
 
-The MIT License (MIT)
+Apache License, Version 2.0
 
 """
 import numpy as np

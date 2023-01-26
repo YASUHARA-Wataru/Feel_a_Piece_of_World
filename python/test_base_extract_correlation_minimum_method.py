@@ -4,7 +4,7 @@ Created on Sun Jan 22 11:15:29 2023
 
 @author: YASUHARA Wataru
 
-The MIT License (MIT)
+Apache License, Version 2.0
 """
 import numpy as np
 import pandas as pd
