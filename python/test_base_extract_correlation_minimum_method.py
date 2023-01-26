@@ -4,8 +4,9 @@ Created on Sun Jan 22 11:15:29 2023
 
 @author: YASUHARA Wataru
 
-Apache License, Version 2.0
+MIT License
 """
+
 import numpy as np
 import pandas as pd
 from PIL import Image
