@@ -196,7 +196,7 @@ def continuous_analisys_2D(data):
 
     return stan_continuous_num
 
-def any_base_analysis_1D_only_positive(data,base):
+def any_base_analysis_1D(data,base):
     """
     Parameters
     ----------
@@ -252,7 +252,7 @@ def any_base_analysis_1D_only_positive(data,base):
         
     return cor_result
             
-def any_base_analysis_2D_only_positive(data,base):
+def any_base_analysis_2D(data,base):
     """
     Parameters
     ----------
@@ -313,7 +313,7 @@ def any_base_analysis_2D_only_positive(data,base):
         
     return cor_result
         
-def any_base_analysis_1D(data,base):
+def any_base_analysis_1D_with_negative(data,base):
     """
     Parameters
     ----------
@@ -373,7 +373,7 @@ def any_base_analysis_1D(data,base):
         
     return cor_result
             
-def any_base_analysis_2D(data,base):
+def any_base_analysis_2D_with_negative(data,base):
     """
     Parameters
     ----------
@@ -471,7 +471,7 @@ def main():
     base = np.array([1,0,0,1,0,1])
     value[::5] = 1
     value[::3] += 1
-    cor_result = any_base_analysis_1D_only_positive(value,base)
+    cor_result = any_base_analysis_1D(value,base)
     print('cor_result:' + str(cor_result))
     # test any_base_analysis_2D
     value = np.zeros((100,100),dtype='f')
@@ -483,7 +483,7 @@ def main():
     value[2:6,2:6] += base
     print('base:\n'+str(base))
     print('value:\n'+str(value))
-    cor_result = any_base_analysis_2D_only_positive(value,base)
+    cor_result = any_base_analysis_2D(value,base)
     print('cor_result:\n' + str(cor_result))
 
     # test any_base_analysis_1D
@@ -492,7 +492,7 @@ def main():
     value[:6] = base
     print(value)
     print(base)
-    cor_result = any_base_analysis_1D(value,base)
+    cor_result = any_base_analysis_1D_with_negative(value,base)
     np.savetxt('text1.txt',cor_result)
     print('cor_result:' + str(cor_result))
     
@@ -508,7 +508,7 @@ def main():
     value[1:5,2:6] += base
     print('base:\n'+str(base))
     print('value:\n'+str(value))
-    cor_result = any_base_analysis_2D(value,base)
+    cor_result = any_base_analysis_2D_with_negative(value,base)
     print('cor_result:\n' + str(cor_result))
 
 
