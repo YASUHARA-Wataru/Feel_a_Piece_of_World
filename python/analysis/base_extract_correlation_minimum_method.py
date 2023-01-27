@@ -315,6 +315,12 @@ def any_base_analysis_2D(data,base):
         
 def any_base_analysis_1D_with_negative(data,base):
     """
+    Warnings:
+        Recommend to use "any_base_analysis_1D()".  
+        this function result is difficult to analyize.  
+        You should plus minimum value of data to data and 
+        use "any_base_analysis_1D()",
+
     Parameters
     ----------
     data : TYPE
@@ -368,6 +374,12 @@ def any_base_analysis_1D_with_negative(data,base):
             
 def any_base_analysis_2D_with_negative(data,base):
     """
+    Warnings:
+        Recommend to use "any_base_analysis_2D()".  
+        this function result is difficult to analyize.  
+        You should plus minimum value of data to data and 
+        use "any_base_analysis_2D()",
+        
     Parameters
     ----------
     data : TYPE
@@ -480,7 +492,6 @@ def main():
     print(value)
     print(base)
     cor_result = any_base_analysis_1D_with_negative(value,base)
-    np.savetxt('text1.txt',cor_result)
     print('cor_result:' + str(cor_result))
     
     # test any_base_analysis_2D
