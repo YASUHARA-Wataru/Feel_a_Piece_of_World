@@ -6,7 +6,6 @@ MIT License
 
 """
 import numpy as np
-import warnings
 
 def freq_analysis_1D(data):
     """
@@ -223,6 +222,7 @@ def any_base_analysis_1D(data,base):
     data = np.array(data)
     base = np.array(base)
 
+
     if np.min(data) < 0:
         raise Exception('data can\'t contain negative values.')
 
@@ -342,14 +342,7 @@ def any_base_analysis_1D_with_negative(data,base):
 
     if data.flatten().shape[0] != len(list(data)) :
         raise Exception('data is not 1D array.')
-
-    if np.min(data) < 0:
-        warnings.warn('data contains negative. difficult to analyze.')
-
-    if np.min(base) < 0:
-        warnings.warn('base contains negative. difficult to analyze.')
- 
-
+        
     data_num = data.shape[0]
     base_num = base.shape[0]
     
@@ -403,12 +396,6 @@ def any_base_analysis_2D_with_negative(data,base):
     if np.array(data.shape).shape[0] != 2:
         raise Exception('data is not 2D array.')
  
-    if np.min(data) < 0:
-        warnings.warn('data contains negative. difficult to analyze.')
-
-    if np.min(base) < 0:
-        warnings.warn('base contains negative. difficult to analyze.')
-
     data_num_dim1 = data.shape[0]
     data_num_dim2 = data.shape[1]
     base_num_dim1 = base.shape[0]
