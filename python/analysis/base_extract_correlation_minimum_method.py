@@ -244,7 +244,7 @@ def any_base_analysis_1D_only_positive(data,base):
     for i in range(data_num-base_num):
         data_cut = data[i:i+base_num]
         calc_index = base > 0
-        cor_result[i] = np.min(data_cut[calc_index]*base[calc_index])
+        cor_result[i] = np.min(data_cut[calc_index]/base[calc_index])
         
     return cor_result
             
@@ -303,7 +303,7 @@ def any_base_analysis_2D_only_positive(data,base):
         for j in range(data_num_dim2-base_num_dim2):
             data_cut = data[i:i+base_num_dim1,j:j+base_num_dim2]
             calc_index = base > 0
-            cor_result[i,j] = np.min(data_cut[calc_index]*base[calc_index])
+            cor_result[i,j] = np.min(data_cut[calc_index]/base[calc_index])
         
     return cor_result
         
@@ -351,7 +351,7 @@ def any_base_analysis_1D(data,base):
     for i in range(data_num-base_num):
         data_cut = data[i:i+base_num]
         calc_index = base != 0 # maybe no problem using float
-        temp_cor = data_cut[calc_index]*base[calc_index]
+        temp_cor = data_cut[calc_index]/base[calc_index]
         ex_cor = temp_cor[temp_cor>=0] # reject negative value
         if len(ex_cor) > 0:
             cor_result[i] = np.min(ex_cor)
@@ -406,7 +406,7 @@ def any_base_analysis_2D(data,base):
         for j in range(data_num_dim2-base_num_dim2):
             data_cut = data[i:i+base_num_dim1,j:j+base_num_dim2]
             calc_index = base != 0 # maybe no problem using float
-            temp_cor = data_cut[calc_index]*base[calc_index]
+            temp_cor = data_cut[calc_index]/base[calc_index]
             ex_cor = temp_cor[temp_cor>=0] # reject negative value
             if len(ex_cor) > 0:
                 cor_result[i,j] = np.min(ex_cor)
@@ -449,16 +449,18 @@ def main():
     value[::3] += 1
     cor_result = any_base_analysis_1D_only_positive(value,base)
     print('cor_result:' + str(cor_result))
-
     # test any_base_analysis_2D
-    value = np.zeros((100,100))
+    value = np.zeros((100,100),dtype='f')
     base = np.array([[1,0,1,0],
                      [0,0,0,0],
-                     [1,0,1,0],
-                     [0,0,0,1]])
+                     [1,0,2,0],
+                     [0,0,0,1]],dtype='f')
     value[:4,:4] = base
+    value[2:6,2:6] += base
+    print('base:\n'+str(base))
+    print('value:\n'+str(value))
     cor_result = any_base_analysis_2D_only_positive(value,base)
-    print('cor_result:' + str(cor_result))
+    print('cor_result:\n' + str(cor_result))
 
     # test any_base_analysis_1D
     value = np.zeros(100)
@@ -469,7 +471,7 @@ def main():
     cor_result = any_base_analysis_1D(value,base)
     np.savetxt('text1.txt',cor_result)
     print('cor_result:' + str(cor_result))
-
+    
     # test any_base_analysis_2D
     value = np.zeros((100,100))
     base = np.array([[1,0,1,0],
@@ -477,10 +479,11 @@ def main():
                      [1,0,-5,0],
                      [0,0,0,1]])
     value[:4,:4] = base
+    #value[2,2] = 1
     value[2:6,2:6] += base*0.5
-    value[1:5,3:7] += base
-    print(value)
-    print(base)
+    value[1:5,2:6] += base
+    print('base:\n'+str(base))
+    print('value:\n'+str(value))
     cor_result = any_base_analysis_2D(value,base)
     print('cor_result:\n' + str(cor_result))
 
