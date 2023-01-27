@@ -349,7 +349,7 @@ def any_base_analysis_1D(data,base):
         data_cut = data[i:i+base_num]
         calc_index = base != 0 # maybe no problem using float
         temp_cor = data_cut[calc_index]*base[calc_index]
-        ex_cor = temp_cor[temp_cor>=0]
+        ex_cor = temp_cor[temp_cor>=0] # reject negative value
         if len(ex_cor) > 0:
             cor_result[i] = np.min(ex_cor)
         
@@ -403,7 +403,7 @@ def any_base_analysis_2D(data,base):
             data_cut = data[i:i+base_num_dim1,j:j+base_num_dim2]
             calc_index = base != 0 # maybe no problem using float
             temp_cor = data_cut[calc_index]*base[calc_index]
-            ex_cor = temp_cor[temp_cor>=0]
+            ex_cor = temp_cor[temp_cor>=0] # reject negative value
             if len(ex_cor) > 0:
                 cor_result[i,j] = np.min(ex_cor)
         
@@ -473,7 +473,7 @@ def main():
                      [1,0,-5,0],
                      [0,0,0,1]])
     value[:4,:4] = base
-    value[2:6,2:6] += base
+    value[2:6,2:6] += base*0.5
     value[1:5,3:7] += base
     print(value)
     print(base)
