@@ -224,7 +224,7 @@ def any_base_analysis_1D_only_positive(data,base):
     base = np.array(base)
 
     if np.min(data) < 0:
-        raise Exception('data contains negative.')
+        raise Exception('data can\'t contain negative values.')
 
     if np.min(base) < 0:
         raise Exception('base can\'t contain negative values.')
@@ -240,6 +240,9 @@ def any_base_analysis_1D_only_positive(data,base):
     
     if data_num < base_num:
         raise Exception('base is too large.')
+
+    if 1 not in np.abs(base):
+        raise Exception('base must contain 1.')
     
     cor_result = np.zeros(data_num - base_num,dtype='f')
     for i in range(data_num-base_num):
@@ -277,7 +280,7 @@ def any_base_analysis_2D_only_positive(data,base):
     base = np.array(base)
 
     if np.min(data) < 0:
-        raise Exception('data contains negative.')
+        raise Exception('data can\'t contains negative values.')
 
     if np.min(base) < 0:
         raise Exception('base can\'t contain negative values.')
@@ -298,6 +301,8 @@ def any_base_analysis_2D_only_positive(data,base):
     if data_num_dim2 < base_num_dim2:
         raise Exception('base Dim2 is too large.')
 
+    if 1 not in np.abs(base):
+        raise Exception('base must contain 1.')
     
     cor_result = np.zeros((data_num_dim1 - base_num_dim1,data_num_dim2 - base_num_dim2),dtype='f')
     for i in range(data_num_dim1-base_num_dim1):
@@ -353,6 +358,9 @@ def any_base_analysis_1D(data,base):
     
     if np.min(np.abs(base)[np.abs(base) > 0]) != 1:
         raise Exception('base not zero value absolute min must be 1.')
+
+    if 1 not in np.abs(base):
+        raise Exception('base must contain 1 or -1.')
     
     cor_result = np.zeros(data_num - base_num,dtype='f')
     for i in range(data_num-base_num):
@@ -413,6 +421,9 @@ def any_base_analysis_2D(data,base):
 
     if np.min(np.abs(base)[np.abs(base) > 0]) != 1:
         raise Exception('base not zero value absolute min must be 1.')
+
+    if 1 not in np.abs(base):
+        raise Exception('base must contain 1 or -1.')
     
     cor_result = np.zeros((data_num_dim1 - base_num_dim1,data_num_dim2 - base_num_dim2),dtype='f')
     for i in range(data_num_dim1-base_num_dim1):
