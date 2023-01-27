@@ -463,7 +463,7 @@ def main():
     value = np.zeros(100)
     value[::5] = 1
     freq_nums = freq_analysis_1D(value)
-    print('freq_nums:' + str(freq_nums))
+    print('freq_nums:\n' + str(freq_nums))
     
     # test_freq_analysis_2D
     value = np.zeros((40,30))
@@ -491,7 +491,7 @@ def main():
     value[::5] = 1
     value[::3] += 1
     cor_result = any_base_analysis_1D(value,base)
-    print('cor_result:' + str(cor_result))
+    print('cor_result:\n' + str(cor_result))
     # test any_base_analysis_2D
     value = np.zeros((100,100),dtype='f')
     base = np.array([[1,0,1,0],
@@ -512,7 +512,7 @@ def main():
     print(value)
     print(base)
     cor_result = any_base_analysis_1D_with_negative(value,base)
-    print('cor_result:' + str(cor_result))
+    print('cor_result:\n' + str(cor_result))
     
     # test any_base_analysis_2D
     value = np.zeros((100,100))
