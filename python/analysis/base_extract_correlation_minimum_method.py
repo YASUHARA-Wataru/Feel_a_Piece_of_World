@@ -211,6 +211,7 @@ def any_base_analysis_1D_only_positive(data,base):
         If Data contains negative value, raises error
         If base contains negative value, raises error
         If base is lager than Data, raises error
+        If base not zero value absoulte min is not 1 , raises error
 
     Returns
     -------
@@ -263,6 +264,7 @@ def any_base_analysis_2D_only_positive(data,base):
         If Data contains negative value, raises error
         If base contains negative value, raises error
         If base is lager than Data, raises error
+        If base not zero value absoulte min is not 1 , raises error
 
     Returns
     -------
@@ -321,6 +323,7 @@ def any_base_analysis_1D(data,base):
         If Data contains negative value, raises error
         If base contains negative value, raises error
         If base is lager than Data, raises error
+        If base not zero value absoulte min is not 1 , raises error
 
     Returns
     -------
@@ -371,6 +374,7 @@ def any_base_analysis_2D(data,base):
         If Data contains negative value, raises error
         If base contains negative value, raises error
         If base is lager than Data, raises error
+        If base not zero value absoulte min is not 1 , raises error
 
     Returns
     -------
