@@ -29,7 +29,7 @@ for date in data_date:
 # functionn of test
 freq_nums = becmm.freq_analysis_1D(value)
 continous = becmm.continuous_analisys_1D(value)
-base = [1,0,0]
+base = [1,0,1]
 base_ana = becmm.any_base_analysis_1D(value, base)
 
 # embed for plot
@@ -42,7 +42,7 @@ base_ana_emb4plot[:base_ana.shape[0]] = base_ana
 fig, ax = plt.subplots(4, 1, sharex="all", figsize=(6, 5),tight_layout=True)
 fig.suptitle("base_extract_correlation_minimum_method 1D analysis")
 ax[0].set_title('Data')
-ax[0].plot(date_diff,value)
+ax[0].bar(date_diff,value)
 ax[1].set_title('freq analysis')
 ax[1].bar(date_diff,freq_nums_emb4plot)
 ax[2].set_title('contious analysis')

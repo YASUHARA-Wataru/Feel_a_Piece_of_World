@@ -83,7 +83,7 @@
 
 - 出力例  
 
-![基底抽出相関最小法_1D_output](https://user-images.githubusercontent.com/123277284/213916168-b9017767-66ae-4818-9dc9-3152c3f23145.png)
+![基底抽出相関最小法_1D_output](https://user-images.githubusercontent.com/123277284/215018869-0b5e335e-2833-4f07-a2d7-1e3846758405.png)
 
 ![基底抽出相関最小法_2D_output](https://user-images.githubusercontent.com/123277284/213916338-f4979a2b-46a2-4952-ac4d-71ee66215410.png)
 
@@ -91,7 +91,8 @@
 フーリエ変換と同様に基底抽出相関最小法でもエイリアスが発生します。  
 下の図はエイリアスを表示したものです。  
 
-![エイリアス](https://user-images.githubusercontent.com/123277284/213925031-55cba1bd-7460-41a2-a844-e47af966cd37.png)
+![エイリアス](https://user-images.githubusercontent.com/123277284/215019016-c7ef950b-2672-4415-8089-340ac897e656.png)  
+
 
 図は、3回に一度規則的に現象が発生しているデータを解析したものです。  
 これを周期解析すると、3回に一度、6回に一度、9回に一度、....といった、  
