@@ -212,6 +212,8 @@ def any_base_analysis_1D(data,base):
         If base contains negative value, raises error
         If base is lager than Data, raises error
         If base not zero value absoulte min is not 1 , raises error
+        If base do not contain more than 2 values without 0 , raises error
+        cause there is no pattern.
 
     Returns
     -------
@@ -223,6 +225,9 @@ def any_base_analysis_1D(data,base):
     base = np.array(base)
 
 
+    if data.flatten().shape[0] != len(list(data)) :
+        raise Exception('data is not 1D array.')
+
     if np.min(data) < 0:
         raise Exception('data can\'t contain negative values.')
 
@@ -231,9 +236,9 @@ def any_base_analysis_1D(data,base):
 
     if np.min(np.abs(base)[np.abs(base) > 0]) != 1:
         raise Exception('base not zero value absolute min must be 1.')
- 
-    if data.flatten().shape[0] != len(list(data)) :
-        raise Exception('data is not 1D array.')
+        
+    if np.sum(np.abs(base) > 0) < 2:
+        raise Exception('base must contain 2 values which is not 0.')
 
     data_num = data.shape[0]
     base_num = base.shape[0]
@@ -269,6 +274,8 @@ def any_base_analysis_2D(data,base):
         If base contains negative value, raises error
         If base is lager than Data, raises error
         If base not zero value absoulte min is not 1 , raises error
+        If base do not contain more than 2 values without 0 , raises error
+        cause there is no pattern.
 
     Returns
     -------
@@ -279,6 +286,9 @@ def any_base_analysis_2D(data,base):
     data = np.array(data)
     base = np.array(base)
 
+    if np.array(data.shape).shape[0] != 2:
+        raise Exception('data is not 2D array.')
+
     if np.min(data) < 0:
         raise Exception('data can\'t contains negative values.')
 
@@ -288,8 +298,8 @@ def any_base_analysis_2D(data,base):
     if np.min(np.abs(base)[np.abs(base) > 0]) != 1:
         raise Exception('base not zero value absolute min must be 1.')
     
-    if np.array(data.shape).shape[0] != 2:
-        raise Exception('data is not 2D array.')
+    if np.sum(np.abs(base) > 0) < 2:
+        raise Exception('base must contain 2 values which is not 0.')
 
     data_num_dim1 = data.shape[0]
     data_num_dim2 = data.shape[1]
@@ -336,6 +346,8 @@ def any_base_analysis_1D_with_negative(data,base):
         If base contains negative value, raises error
         If base is lager than Data, raises error
         If base not zero value absoulte min is not 1 , raises error
+        If base do not contain more than 2 values without 0 , raises error
+        cause there is no pattern.
 
     Returns
     -------
@@ -360,6 +372,9 @@ def any_base_analysis_1D_with_negative(data,base):
 
     if 1 not in np.abs(base):
         raise Exception('base must contain 1 or -1.')
+
+    if np.sum(np.abs(base) > 0) < 2:
+        raise Exception('base must contain 2 values which is not 0.')
     
     cor_result = np.zeros(data_num - base_num,dtype='f')
     for i in range(data_num-base_num):
@@ -395,7 +410,9 @@ def any_base_analysis_2D_with_negative(data,base):
         If base contains negative value, raises error
         If base is lager than Data, raises error
         If base not zero value absoulte min is not 1 , raises error
-
+        If base do not contain more than 2 values without 0 , raises error
+        cause there is no pattern.
+,,
     Returns
     -------
     cor_result : TYPE
@@ -423,6 +440,9 @@ def any_base_analysis_2D_with_negative(data,base):
 
     if 1 not in np.abs(base):
         raise Exception('base must contain 1 or -1.')
+
+    if np.sum(np.abs(base) > 0) < 2:
+                                                                                                                                                                                                                                raise Exception('base must contain 2 values which is not 0.')
     
     cor_result = np.zeros((data_num_dim1 - base_num_dim1,data_num_dim2 - base_num_dim2),dtype='f')
     for i in range(data_num_dim1-base_num_dim1):
