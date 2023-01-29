@@ -19,7 +19,6 @@ but It can be be apply to Multidimensional.
 
 This fuction output 1-dimentional data freqency distribution.  
 low index data is high freqency and high index is low freqency.  
-Index0 is mean of continuous,  
 
 - freq_analysis_2D  
 基底抽出相関最小法により、2次元のデータの頻度の分布を求める関数。  
