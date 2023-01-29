@@ -28,20 +28,34 @@ def freq_analysis_1D(data):
     """
     data = np.array(data)
 
-    if np.min(data) < 0:
-        raise Exception('data contains negative.')
-
     if data.flatten().shape[0] != len(list(data)):
         raise Exception('data is not 1D array.')
 
-    data_num = data.shape[0]
-    max_freqs = int(data_num/2)+1
-    freq_nums = np.zeros(max_freqs-1,dtype='f')
-    
-    for freq in range(1,max_freqs):
-        for i in range(data_num-freq-1):
-            freq_nums[freq-1] += np.min([data[i],data[i+freq+1]])
-            
+    if np.min(data) > 0:
+
+        data_num = data.shape[0]
+        max_freqs = int(data_num/2)+1
+        freq_nums = np.zeros(max_freqs-1,dtype='f')
+        
+        for freq in range(1,max_freqs):
+            for i in range(data_num-freq-1):
+                freq_nums[freq-1] += np.min([data[i],data[i+freq+1]])
+
+    else:
+        
+        data_min = np.min(data)
+        data = data - data_min
+        
+        data_num = data.shape[0]
+        max_freqs = int(data_num/2)+1
+        freq_nums = np.zeros(max_freqs-1,dtype='f')
+        
+        for freq in range(1,max_freqs):
+            for i in range(data_num-freq-1):
+                freq_nums[freq-1] += np.min([data[i],data[i+freq+1]])
+
+        freq_nums = freq_nums + data_min
+        
     # normalize
     bin_nums = np.arange(data_num-1,data_num-max_freqs,-1)
     stan_freq_num = freq_nums/bin_nums

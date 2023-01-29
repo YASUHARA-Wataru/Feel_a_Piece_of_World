@@ -4,7 +4,12 @@
 多次元データに対応可能だが、1次元と2次元データのみの対応とした。  
 テストスクリプトでテストデータの解析結果が出力されます。  
 
-# 関数について  
+This method calculate freqency,patterns of data using base.  
+This version can be apply to 1 and 2 - dimentional data,  
+but It can be be apply to Multidimensional.  
+ 
+
+# 関数について(about function)  
 - freq_analysis_1D  
 基底抽出相関最小法により、1次元のデータの頻度の分布を求める関数。  
 インデックスが小さい物が高頻度、大きいものが低頻度となっており、  
@@ -12,6 +17,9 @@
 インデックス1が二回に一回度事象が起きる回数の平均、  
 インデックス2が三回に一回度事象が起きる回数の平均、... となります。
 
+This fuction output 1-dimentional data freqency distribution.  
+low index data is high freqency and high index is low freqency.  
+Index0 is mean of continuous,  
 
 - freq_analysis_2D  
 基底抽出相関最小法により、2次元のデータの頻度の分布を求める関数。  
