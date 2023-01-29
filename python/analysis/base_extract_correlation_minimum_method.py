@@ -85,33 +85,59 @@ def freq_analysis_2D(data):
 
     data = np.array(data)
 
-    if np.min(data) < 0:
-        raise Exception('data contains negative.')
-
     if np.array(data.shape).shape[0] != 2:
         raise Exception('data is not 2D array.')
 
-    data_dim1 = data.shape[0]
-    data_dim2 = data.shape[1]
+    if np.min(data) > 0:
 
-    freqs_rank1 = int(data_dim1/2)+1
-    freqs_rank2 = int(data_dim2/2)+1
-    freq_nums = np.zeros((freqs_rank1,freqs_rank2),dtype='f')
+        data_dim1 = data.shape[0]
+        data_dim2 = data.shape[1]
     
+        freqs_rank1 = int(data_dim1/2)+1
+        freqs_rank2 = int(data_dim2/2)+1
+        freq_nums = np.zeros((freqs_rank1,freqs_rank2),dtype='f')
+        
+    
+        for freq1 in range(freqs_rank1):
+            for freq2 in range(freqs_rank2):            
+                for i in range(data_dim1-freq1-1):
+                    for j in range(data_dim2-freq2-1):
+                        interest1_data = data[i,j]
+                        interest2_data = data[i+freq1,j+freq2]
+                        interest3_data = data[i,j+freq2]
+                        interest4_data = data[i+freq1,j+freq2]
+                        interest_data = [interest1_data,
+                                            interest2_data,
+                                            interest3_data,
+                                            interest4_data]
+                        freq_nums[freq1,freq2] += np.min(interest_data)
+    else:
+        
+        data_min = np.min(data)
+        data = data - data_min
+        
+        data_dim1 = data.shape[0]
+        data_dim2 = data.shape[1]
 
-    for freq1 in range(freqs_rank1):
-        for freq2 in range(freqs_rank2):            
-            for i in range(data_dim1-freq1-1):
-                for j in range(data_dim2-freq2-1):
-                    interest1_data = data[i,j]
-                    interest2_data = data[i+freq1,j+freq2]
-                    interest3_data = data[i,j+freq2]
-                    interest4_data = data[i+freq1,j+freq2]
-                    interest_data = [interest1_data,
-                                        interest2_data,
-                                        interest3_data,
-                                        interest4_data]
-                    freq_nums[freq1,freq2] += np.min(interest_data)
+        freqs_rank1 = int(data_dim1/2)+1
+        freqs_rank2 = int(data_dim2/2)+1
+        freq_nums = np.zeros((freqs_rank1,freqs_rank2),dtype='f')
+        
+        for freq1 in range(freqs_rank1):
+            for freq2 in range(freqs_rank2):            
+                for i in range(data_dim1-freq1-1):
+                    for j in range(data_dim2-freq2-1):
+                        interest1_data = data[i,j]
+                        interest2_data = data[i+freq1,j+freq2]
+                        interest3_data = data[i,j+freq2]
+                        interest4_data = data[i+freq1,j+freq2]
+                        interest_data = [interest1_data,
+                                            interest2_data,
+                                            interest3_data,
+                                            interest4_data]
+                        freq_nums[freq1,freq2] += np.min(interest_data)
+
+        freq_nums = freq_nums - data_min
 
     # normalize
     rank1_nums = np.arange(data_dim1,data_dim1-freqs_rank1,-1).reshape((freqs_rank1,1))
