@@ -1,4 +1,4 @@
-# 基底抽出相関最小法(base extract correlation minimum method)  
+# 基底抽出(割算)相関最小法(base extract (division) correlation minimum method)  
 
 基底を用いてデータの周期性やパターンを計算する手法です。  
 多次元データに対応可能だが、1次元と2次元データのみの対応とした。  
@@ -74,7 +74,7 @@ low index data is high freqency and high index is low freqency.
 数学的な厳密性はないが、波による周期性ではなく設定した間隔の頻度を計算する手法です。  
 また、(割り算)相関の計算途中の値を見ることによりどの位置で任意のパターンが発生しているか確認できます。    
 
-![基底抽出相関最小法](https://user-images.githubusercontent.com/123277284/214988231-e8797346-1004-4277-9321-5d81a6dadb39.png)
+![基底抽出相関最小法](https://user-images.githubusercontent.com/124280238/216363851-26d708cc-440b-4e65-8363-3bbf618fb1df.png)
 
 頻度解析では、基底を二つをおき、その二つの基底の間隔を一つずつ増やしていき、  
 データの周期性を計算しています。    
@@ -91,15 +91,15 @@ low index data is high freqency and high index is low freqency.
 
 - 出力例  
 
-![基底抽出相関最小法_1D_output](https://user-images.githubusercontent.com/123277284/215018869-0b5e335e-2833-4f07-a2d7-1e3846758405.png)
+![基底抽出相関最小法_1D_output](https://user-images.githubusercontent.com/124280238/216363933-1b8f515f-3970-4d4f-ad47-c860e8c3fef3.png)
 
-![基底抽出相関最小法_2D_output](https://user-images.githubusercontent.com/123277284/213916338-f4979a2b-46a2-4952-ac4d-71ee66215410.png)
+![基底抽出相関最小法_2D_output](https://user-images.githubusercontent.com/124280238/216364029-2af5cad8-bff8-4ee5-b3ad-87f54379f778.png)
 
 # エイリアス
 フーリエ変換と同様に基底抽出相関最小法でもエイリアスが発生します。  
 下の図はエイリアスを表示したものです。  
 
-![エイリアス](https://user-images.githubusercontent.com/123277284/215019016-c7ef950b-2672-4415-8089-340ac897e656.png)  
+![エイリアス](https://user-images.githubusercontent.com/124280238/216364140-38229fd7-0f83-4e06-a833-309869cba326.png)
 
 
 図は、3回に一度規則的に現象が発生しているデータを解析したものです。  
