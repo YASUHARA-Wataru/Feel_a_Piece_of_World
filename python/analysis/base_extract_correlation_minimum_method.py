@@ -290,7 +290,7 @@ def any_base_analysis_1D(data,base):
     cor_result = np.zeros(data_num - base_num,dtype='f')
     for i in range(data_num-base_num):
         data_cut = data[i:i+base_num]
-        calc_index = base > 0
+        calc_index = base > 0.001
         cor_result[i] = np.min(data_cut[calc_index]/base[calc_index])
         
     return cor_result
@@ -356,10 +356,70 @@ def any_base_analysis_2D(data,base):
     for i in range(data_num_dim1-base_num_dim1):
         for j in range(data_num_dim2-base_num_dim2):
             data_cut = data[i:i+base_num_dim1,j:j+base_num_dim2]
-            calc_index = base > 0
+            calc_index = base > 0.001
             cor_result[i,j] = np.min(data_cut[calc_index]/base[calc_index])
         
     return cor_result
+
+def any_base_analysis4img(data,base):
+    """
+    Parameters
+    ----------
+    data : TYPE
+        2D-array Data
+    base : TYPE
+        2D-array base
+
+    Raises
+    ------
+    Exception
+        If Data is not 2D-array, raises error
+        If Data contains negative value, raises error
+        If base contains negative value, raises error
+        If base is lager than Data, raises error
+        If base do not contain more than 2 values without 0 , raises error
+        cause there is no pattern.
+
+    Returns
+    -------
+    cor_result : TYPE
+        cor_result
+
+    """
+    data = np.array(data)
+    base = np.array(base)
+
+    if np.array(data.shape).shape[0] != 2:
+        raise Exception('data is not 2D array.')
+
+    if np.min(data) < 0:
+        raise Exception('data can\'t contains negative values.')
+
+    if np.min(base) < 0:
+        raise Exception('base can\'t contain negative values.')
+   
+    if np.sum(np.abs(base) > 0) < 2:
+        raise Exception('base must contain 2 values which is not 0.')
+
+    data_num_dim1 = data.shape[0]
+    data_num_dim2 = data.shape[1]
+    base_num_dim1 = base.shape[0]
+    base_num_dim2 = base.shape[1]
+    
+    if data_num_dim1 < base_num_dim1:
+        raise Exception('base Dim1 is too large.')
+    if data_num_dim2 < base_num_dim2:
+        raise Exception('base Dim2 is too large.')
+
+    cor_result = np.zeros((data_num_dim1 - base_num_dim1,data_num_dim2 - base_num_dim2),dtype='f')
+    for i in range(data_num_dim1-base_num_dim1):
+        for j in range(data_num_dim2-base_num_dim2):
+            data_cut = data[i:i+base_num_dim1,j:j+base_num_dim2]
+            calc_index = base > 0.001
+            cor_result[i,j] = np.min(data_cut[calc_index]/base[calc_index])
+        
+    return cor_result
+
         
 def any_base_analysis_1D_with_negative(data,base):
     """
@@ -482,7 +542,7 @@ def any_base_analysis_2D_with_negative(data,base):
         raise Exception('base must contain 1 or -1.')
 
     if np.sum(np.abs(base) > 0) < 2:
-                                                                                                                                                                                                                                raise Exception('base must contain 2 values which is not 0.')
+        raise Exception('base must contain 2 values which is not 0.')
     
     cor_result = np.zeros((data_num_dim1 - base_num_dim1,data_num_dim2 - base_num_dim2),dtype='f')
     for i in range(data_num_dim1-base_num_dim1):
@@ -577,7 +637,7 @@ def main():
     value[::5] = 1
     value[::3] += 1
     cor_result = any_base_analysis_1D(value,base)
-    print('cor_result:\n' + str(cor_result))
+    print('any_1D_cor_result:\n' + str(cor_result))
     # test any_base_analysis_2D
     value = np.zeros((100,100),dtype='f')
     base = np.array([[1,0,1,0],
@@ -589,7 +649,20 @@ def main():
     print('base:\n'+str(base))
     print('value:\n'+str(value))
     cor_result = any_base_analysis_2D(value,base)
-    print('cor_result:\n' + str(cor_result))
+    print('any_2d_cor_result:\n' + str(cor_result))
+    
+    # test any_base_analysis4img
+    value = np.zeros((100,100),dtype='f')
+    base = np.array([[1,0,1,0],
+                     [0,0,0,0],
+                     [1,0,2,0],
+                     [0,0,0,1]],dtype='f')
+    value[:4,:4] = base
+    value[2:6,2:6] += base
+    print('base:\n'+str(base))
+    print('value:\n'+str(value))
+    cor_result = any_base_analysis4img(value,base)
+    print('any_2d_cor_result:\n' + str(cor_result))
 
     # test any_base_analysis_1D
     value = np.zeros(100)
@@ -598,7 +671,7 @@ def main():
     print(value)
     print(base)
     cor_result = any_base_analysis_1D_with_negative(value,base)
-    print('cor_result:\n' + str(cor_result))
+    print('wn_cor_result:\n' + str(cor_result))
     
     # test any_base_analysis_2D
     value = np.zeros((100,100))
@@ -608,12 +681,13 @@ def main():
                      [0,0,0,1]])
     value[:4,:4] = base
     #value[2,2] = 1
-    value[2:6,2:6] += base*0.5
+    value[2:6,2:6] += base
     value[1:5,2:6] += base
     print('base:\n'+str(base))
     print('value:\n'+str(value))
     cor_result = any_base_analysis_2D_with_negative(value,base)
-    print('cor_result:\n' + str(cor_result))
+    np.savetxt('test.txt',cor_result)
+    print('wn_cor_result:\n' + str(cor_result))
 
 
 if __name__ == "__main__":
