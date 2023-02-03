@@ -2,7 +2,7 @@
 """
 Created on Sun Nov  6 02:03:49 2022
 
-@author: NavigateSafetyFiled
+@author: YASUHARA Wataru
 """
 
 import numpy as np
