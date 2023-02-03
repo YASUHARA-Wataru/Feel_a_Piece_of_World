@@ -6,8 +6,6 @@
 This program calculates amplitude and init phase from wave data.  
 There are function calulate time series demodulate data and init phase,time of max amplitude time.  
 
-# Blog
-
 # requirements
 開発環境  
 developing enviroments  
