@@ -6,12 +6,9 @@ MIT License
 
 """
 
-import numpy as np
-from scipy import signal
-from scipy import stats
-from PIL import Image
 from analysis import LoadWav
 from analysis import wave_analysis
+from visualization import make_frame_circle_stereo_smooth as visualize
 
 def main():
     wave_data_file_name = r"test_stereo_diff.wav"
@@ -24,7 +21,7 @@ def main():
     output_width = 160
     output_height = 120
     file_num_zfill = 10
-
+    
     au_data,au_data_time,a_sr = LoadWav.load_wav(wave_data_folder+wave_data_file_name)
     
     ch1_wave_params = wave_analysis.calc_wave_params(au_data[0],
@@ -35,7 +32,17 @@ def main():
                                     au_data_time,
                                     a_sr,fps,
                                     au_display_sample_num)  
-    
+
+    visualize.make_frame_cir_stereo_smooth(ch1_wave_params,
+                                            ch2_wave_params,
+                                            img_output_folder,
+                                            fps,
+                                            au_display_sample_num,
+                                            display_freq_max,
+                                            delay_time,
+                                            output_width,
+                                            output_height,
+                                            file_num_zfill)
 
     
 if __name__ == "__main__":   

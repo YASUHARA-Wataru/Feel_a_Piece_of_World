@@ -7,8 +7,6 @@ MIT License
 """
 
 import numpy as np
-from scipy import signal
-from scipy import stats
 from PIL import Image
 from analysis import wave_analysis
 
@@ -23,25 +21,37 @@ def make_frame_cir_stereo_smooth(ch1_params:wave_analysis.wave_params_np,
                                  output_height,
                                  file_num_zfill):
     
-    ch1_power = np.log10(min_max_Normalization(np.array(ch1_power))+1)/np.log10(2)
-    ch2_power = np.log10(min_max_Normalization(np.array(ch2_power))+1)/np.log10(2)
-    ch1_Freq_peak = (np.array(ch1_Freq_peak))/display_freq_max
-    ch2_Freq_peak = (np.array(ch2_Freq_peak))/display_freq_max
-    ch1_peak_phase = np.mod((np.array(ch1_demod_phase) + np.pi),(2*np.pi))/(2*np.pi)
-    ch2_peak_phase = np.mod((np.array(ch2_demod_phase) + np.pi),(2*np.pi))/(2*np.pi)
-    ch1_vars = min_max_Normalization(np.array(ch1_var))
-    ch2_vars = min_max_Normalization(np.array(ch2_var))
-    
+    ch1_power = ch1_params.power
+    ch2_power = ch2_params.power
+    ch1_Freq_peak = ch1_params.Freq_peak
+    ch2_Freq_peak = ch2_params.Freq_peak
+    ch1_demod_phase = ch1_params.demod_phase
+    ch2_demod_phase = ch2_params.demod_phase
+    ch1_var = ch1_params.var
+    ch2_var = ch2_params.var
+    ch1_skew = ch1_params.skew
+    ch2_skew = ch2_params.skew
+    ch1_kurt = ch1_params.kurt
+    ch2_kurt = ch2_params.kurt
+
     ch1_skew = np.nan_to_num(ch1_skew,nan=np.nanmean(ch1_skew))  
     ch2_skew = np.nan_to_num(ch2_skew,nan=np.nanmean(ch2_skew))  
     ch1_kurt = np.nan_to_num(ch1_kurt,nan=np.nanmean(ch1_kurt))  
     ch2_kurt = np.nan_to_num(ch2_kurt,nan=np.nanmean(ch2_kurt))  
- 
-    ch1_skews = min_max_Normalization(np.array(ch1_skew))
-    ch2_skews = min_max_Normalization(np.array(ch2_skew))
-    ch1_kurts = min_max_Normalization(np.array(ch1_kurt))
-    ch2_kurts = min_max_Normalization(np.array(ch2_kurt))  
-    print(np.sum(np.isnan(ch1_skew)))
+
+    ch1_power = np.log10(min_max_Normalization(ch1_power)+1)/np.log10(2)
+    ch2_power = np.log10(min_max_Normalization(ch2_power)+1)/np.log10(2)
+    ch1_Freq_peak = (ch1_Freq_peak)/display_freq_max
+    ch2_Freq_peak = (ch2_Freq_peak)/display_freq_max
+    ch1_peak_phase = (ch1_demod_phase)/(2*np.pi)
+    ch2_peak_phase = (ch2_demod_phase)/(2*np.pi)
+    ch1_vars = min_max_Normalization(ch1_var)
+    ch2_vars = min_max_Normalization(ch2_var)
+    
+    ch1_skews = min_max_Normalization(ch1_skew)
+    ch2_skews = min_max_Normalization(ch2_skew)
+    ch1_kurts = min_max_Normalization(ch1_kurt)
+    ch2_kurts = min_max_Normalization(ch2_kurt)  
     
     #max_size_per_width = 8
     #min_size_per_width = 100
@@ -61,11 +71,11 @@ def make_frame_cir_stereo_smooth(ch1_params:wave_analysis.wave_params_np,
     
     for index in range(ch1_size_params.shape[0]):
         #print("\r"+str(index),end="")
-        if index ==0:
+        if index == 0:
             pre_index = 0
         else:
             pre_index = index - 1
-
+        
         temp_ch1_diff_x1 = np.abs(ch1_x_posi_params[pre_index] - ch1_x_posi_params[index])
         temp_ch1_diff_x2 = output_width - np.abs(ch1_x_posi_params[pre_index] - ch1_x_posi_params[index])
         if temp_ch1_diff_x1 > temp_ch1_diff_x2:
@@ -224,46 +234,9 @@ def revers_point(point,width):
         output = width/2 + point
     return output
 
-def lowpass(x, samplerate, fp, fs, gpass, gstop):
-    fn = samplerate / 2   #ナイキスト周波数
-    wp = fp / fn  #ナイキスト周波数で通過域端周波数を正規化
-    ws = fs / fn  #ナイキスト周波数で阻止域端周波数を正規化
-
-    N, Wn = signal.buttord(wp, ws, gpass, gstop)  #オーダーとバターワースの正規化周波数を計算
-    b, a = signal.butter(N, Wn, "low")            #フィルタ伝達関数の分子と分母を計算
-    y = signal.filtfilt(b, a, x)                  #信号に対してフィルタをかける
-    return y  
-
 def main():
-    wave_data_file_name = r"test_stereo_diff.wav"
-    wave_data_folder = r"test_data\\"
-    img_output_folder = r"python\\temp_file\\"
-    fps = 30
-    #au_display_sample_num = 1024*32
-    au_display_sample_num = int(44100*0.8)
-    delay_time = 0.5
-    display_freq_max = 1500
-    #output_width = 1280
-    #output_height = 720
-    #output_width = 640
-    #output_height = 360
-    #output_width = 640
-    #output_height = 260
-    output_width = 160
-    output_height = 120
-    file_num_zfill = 10
+    pass
 
-    make_frame_cir(wave_data_file_name,
-                       wave_data_folder,
-                       img_output_folder,
-                       fps,
-                       au_display_sample_num,
-                       display_freq_max,
-                       delay_time,
-                       output_width,
-                       output_height,
-                       file_num_zfill)
-    
 if __name__ == "__main__":   
     main()
 

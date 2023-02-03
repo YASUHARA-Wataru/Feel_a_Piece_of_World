@@ -71,7 +71,9 @@ def calc_wave_params(wav_data,
         freq = a_sr/2/(FFT_wav.shape[0]/2)*(Max_freq_ind)
 
         wav_params.Freq_peak.append(freq)
-
+        #wav_params.demod_phase.append(np.angle(FFT_data[Max_freq_ind]))
+        
+        #"""
         mod_t = np.linspace(0, au_display_sample_num*(1/a_sr),au_display_sample_num)
         frame_init_time = au_img_fit_ind/a_sr
         demod_sin_wav = np.sin(2*np.pi*freq*mod_t)
@@ -96,15 +98,15 @@ def calc_wave_params(wav_data,
                 init_phase = -2*np.pi + init_phase
             wav_params.demod_phase.append(demod_phase_temp +init_phase)
             wav_params.power.append(np.sqrt(np.max(np.power(I_filted,2)+np.power(Q_filted,2))))
-
+        #"""
     wav_params_np = wave_params_np()
     wav_params_np.power = np.array(wav_params.power)
     wav_params_np.Freq_peak = np.array(wav_params.Freq_peak)
-    wav_params_np.peak_phase = np.mod((np.array(wav_params.demod_phase) + np.pi),(2*np.pi))
+    wav_params_np.demod_phase = np.mod((np.array(wav_params.demod_phase) + np.pi),(2*np.pi))
     
-    wav_params_np.var_s = np.array(wav_params.var)
-    wav_params_np.skew_s = np.array(wav_params.skew)  
-    wav_params_np.kurt_s = np.array(wav_params.kurt)  
+    wav_params_np.var = np.array(wav_params.var)
+    wav_params_np.skew = np.array(wav_params.skew)  
+    wav_params_np.kurt = np.array(wav_params.kurt)  
     
     return wav_params_np
     
@@ -139,17 +141,17 @@ def main():
 
     print(ch1_wave_params.power)
     print(ch1_wave_params.Freq_peak)
-    print(ch1_wave_params.peak_phase)
-    print(ch1_wave_params.var_s)
-    print(ch1_wave_params.skew_s)
-    print(ch1_wave_params.kurt_s)
+    print(ch1_wave_params.demod_phase)
+    print(ch1_wave_params.var)
+    print(ch1_wave_params.skew)
+    print(ch1_wave_params.kurt)
 
     print(ch2_wave_params.power)
     print(ch2_wave_params.Freq_peak)
-    print(ch2_wave_params.peak_phase)
-    print(ch2_wave_params.var_s)
-    print(ch2_wave_params.skew_s)
-    print(ch2_wave_params.kurt_s)
+    print(ch2_wave_params.demod_phase)
+    print(ch2_wave_params.var)
+    print(ch2_wave_params.skew)
+    print(ch2_wave_params.kurt)
 
     
 if __name__ == "__main__":   
