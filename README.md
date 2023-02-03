@@ -9,7 +9,6 @@ personal work project
   計測では、一般的な技術だが、映像化にどれだけ用いられているかは不明。
   詳細は、初期位相は、[document/Quadrature_detection_memo.md](document/Quadrature_detection_memo.md)。
   全体的な説明は、[document/Audio_visualization.md](document/Audio_visualization.md)に記載。
-=======
 
 # License
 MIT

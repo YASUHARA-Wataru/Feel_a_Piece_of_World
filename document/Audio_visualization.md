@@ -15,6 +15,8 @@
 # 動作するスクリプト
 python//audio2video_stereo.pyとpython//audio2video_stereo_dragon.pyで、  
 temp_imgに画像が出力される。  
+また、python//video_maker_opencv.pyで画像から動画が作成できます。  
+
 読み込むモジュールはプログラムを参照してください。  
 
 # reference  
