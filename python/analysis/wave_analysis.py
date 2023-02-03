@@ -71,7 +71,7 @@ def calc_wave_params(wav_data,
         freq = a_sr/2/(FFT_wav.shape[0]/2)*(Max_freq_ind)
 
         wav_params.Freq_peak.append(freq)
-        #wav_params.demod_phase.append(np.angle(FFT_data[Max_freq_ind]))
+        #wav_params.demod_phase.append(np.angle(FFT_data[Max_freq_ind])) # FFT Ver
         
         #"""
         mod_t = np.linspace(0, au_display_sample_num*(1/a_sr),au_display_sample_num)
@@ -102,7 +102,7 @@ def calc_wave_params(wav_data,
     wav_params_np = wave_params_np()
     wav_params_np.power = np.array(wav_params.power)
     wav_params_np.Freq_peak = np.array(wav_params.Freq_peak)
-    wav_params_np.demod_phase = np.mod((np.array(wav_params.demod_phase) + np.pi),(2*np.pi))
+    wav_params_np.demod_phase = np.mod((np.array(wav_params.demod_phase)),(2*np.pi)) - np.pi
     
     wav_params_np.var = np.array(wav_params.var)
     wav_params_np.skew = np.array(wav_params.skew)  

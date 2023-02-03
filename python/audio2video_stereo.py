@@ -8,7 +8,7 @@ MIT License
 
 from analysis import LoadWav
 from analysis import wave_analysis
-from visualization import make_frame_circle_stereo_smooth as visualize
+from visualization import make_frame_stereo as visualize
 
 def main():
     wave_data_file_name = r"test_stereo_diff.wav"
