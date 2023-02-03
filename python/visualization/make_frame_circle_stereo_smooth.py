@@ -1,0 +1,269 @@
+# -*- coding: utf-8 -*-
+"""
+@author: YASUHARA Wataru
+
+MIT License
+
+"""
+
+import numpy as np
+from scipy import signal
+from scipy import stats
+from PIL import Image
+from analysis import wave_analysis
+
+def make_frame_cir_stereo_smooth(ch1_params:wave_analysis.wave_params_np,
+                                 ch2_params:wave_analysis.wave_params_np,
+                                 img_output_folder,
+                                 fps,
+                                 au_display_sample_num,
+                                 display_freq_max,
+                                 delay_time,
+                                 output_width,
+                                 output_height,
+                                 file_num_zfill):
+    
+    ch1_power = np.log10(min_max_Normalization(np.array(ch1_power))+1)/np.log10(2)
+    ch2_power = np.log10(min_max_Normalization(np.array(ch2_power))+1)/np.log10(2)
+    ch1_Freq_peak = (np.array(ch1_Freq_peak))/display_freq_max
+    ch2_Freq_peak = (np.array(ch2_Freq_peak))/display_freq_max
+    ch1_peak_phase = np.mod((np.array(ch1_demod_phase) + np.pi),(2*np.pi))/(2*np.pi)
+    ch2_peak_phase = np.mod((np.array(ch2_demod_phase) + np.pi),(2*np.pi))/(2*np.pi)
+    ch1_vars = min_max_Normalization(np.array(ch1_var))
+    ch2_vars = min_max_Normalization(np.array(ch2_var))
+    
+    ch1_skew = np.nan_to_num(ch1_skew,nan=np.nanmean(ch1_skew))  
+    ch2_skew = np.nan_to_num(ch2_skew,nan=np.nanmean(ch2_skew))  
+    ch1_kurt = np.nan_to_num(ch1_kurt,nan=np.nanmean(ch1_kurt))  
+    ch2_kurt = np.nan_to_num(ch2_kurt,nan=np.nanmean(ch2_kurt))  
+ 
+    ch1_skews = min_max_Normalization(np.array(ch1_skew))
+    ch2_skews = min_max_Normalization(np.array(ch2_skew))
+    ch1_kurts = min_max_Normalization(np.array(ch1_kurt))
+    ch2_kurts = min_max_Normalization(np.array(ch2_kurt))  
+    print(np.sum(np.isnan(ch1_skew)))
+    
+    #max_size_per_width = 8
+    #min_size_per_width = 100
+    max_size_per_width = 12
+    min_size_per_width = 120
+    ch1_size_params = ch1_power*output_width/max_size_per_width+output_width/min_size_per_width
+    ch2_size_params = ch2_power*output_width/max_size_per_width+output_width/min_size_per_width
+    ch1_y_posi_params = np.log2(ch1_Freq_peak+1)*output_height
+    ch2_y_posi_params = np.log2(ch2_Freq_peak+1)*output_height
+    ch1_x_posi_params = ch1_peak_phase*output_width
+    ch2_x_posi_params = ch2_peak_phase*output_width
+
+    pre_flames_r = np.zeros((int(fps*delay_time),output_height,output_width))
+    pre_flames_g = np.zeros((int(fps*delay_time),output_height,output_width))
+    pre_flames_b = np.zeros((int(fps*delay_time),output_height,output_width))
+    
+    
+    for index in range(ch1_size_params.shape[0]):
+        #print("\r"+str(index),end="")
+        if index ==0:
+            pre_index = 0
+        else:
+            pre_index = index - 1
+
+        temp_ch1_diff_x1 = np.abs(ch1_x_posi_params[pre_index] - ch1_x_posi_params[index])
+        temp_ch1_diff_x2 = output_width - np.abs(ch1_x_posi_params[pre_index] - ch1_x_posi_params[index])
+        if temp_ch1_diff_x1 > temp_ch1_diff_x2:
+            ch1_diff_x = temp_ch1_diff_x2
+        else:
+            ch1_diff_x = temp_ch1_diff_x1
+
+        temp_ch2_diff_x1 = np.abs(ch2_x_posi_params[pre_index] - ch2_x_posi_params[index])
+        temp_ch2_diff_x2 = output_width - np.abs(ch2_x_posi_params[pre_index] - ch2_x_posi_params[index])
+        if temp_ch2_diff_x1 > temp_ch2_diff_x2:
+            ch2_diff_x = temp_ch2_diff_x2
+        else:
+            ch2_diff_x = temp_ch2_diff_x1
+
+        ch1_diff_y = ch1_y_posi_params[pre_index] - ch1_y_posi_params[index]
+        ch2_diff_y = ch2_y_posi_params[pre_index] - ch2_y_posi_params[index]
+        ch1_m_distance = np.sqrt(np.power(ch1_diff_x,2)+np.power(ch1_diff_y,2))
+        ch2_m_distance = np.sqrt(np.power(ch2_diff_x,2)+np.power(ch2_diff_y,2))
+
+        interpre_multi = 1/2
+        ch1_interpre_num = int(ch1_m_distance*interpre_multi)
+        ch2_interpre_num = int(ch2_m_distance*interpre_multi)
+        print("\r"+str(index)+":"+str(ch1_interpre_num+ch2_interpre_num),end="")
+
+        if ch1_interpre_num == 0:
+            ch1_interpre_num = 1
+        if ch2_interpre_num == 0:
+            ch2_interpre_num = 1
+
+        ch1_x_index = np.tile(np.tile(np.arange(0,output_width),(output_height,1)),(ch1_interpre_num,1,1)).transpose(1,2,0)
+        if temp_ch1_diff_x1 > temp_ch1_diff_x2:
+            ch1_x_index = np.concatenate([ch1_x_index[:,int(output_width/2):,:],ch1_x_index[:,:int(output_width/2),:]],axis=1)
+        ch1_y_index = np.tile(np.tile(np.arange(0,output_height),(output_width,1)).T,(ch1_interpre_num,1,1)).transpose(1,2,0)
+
+        ch2_x_index = np.tile(np.tile(np.arange(0,output_width),(output_height,1)),(ch2_interpre_num,1,1)).transpose(1,2,0)
+        if temp_ch2_diff_x1 > temp_ch2_diff_x2:
+            ch2_x_index = np.concatenate([ch2_x_index[:,int(output_width/2):,:],ch2_x_index[:,:int(output_width/2),:]],axis=1)
+        ch2_y_index = np.tile(np.tile(np.arange(0,output_height),(output_width,1)).T,(ch2_interpre_num,1,1)).transpose(1,2,0)
+        
+        ch1_size_param = np.linspace(ch1_size_params[pre_index], ch1_size_params[index],ch1_interpre_num)
+        ch2_size_param = np.linspace(ch2_size_params[pre_index],ch2_size_params[index],ch2_interpre_num)
+        ch1_y_posi_param = np.linspace(ch1_y_posi_params[pre_index],ch1_y_posi_params[index],ch1_interpre_num)
+        ch2_y_posi_param = np.linspace(ch2_y_posi_params[pre_index],ch2_y_posi_params[index],ch2_interpre_num)
+
+        if temp_ch1_diff_x1 > temp_ch1_diff_x2:
+            begin_point = revers_point(ch1_x_posi_params[pre_index],output_width)
+            end_point = revers_point(ch1_x_posi_params[index],output_width)
+            ch1_x_posi_param = np.linspace(begin_point,end_point,ch1_interpre_num)
+        else:
+            ch1_x_posi_param = np.linspace(ch1_x_posi_params[pre_index],ch1_x_posi_params[index],ch1_interpre_num)
+
+        if temp_ch2_diff_x1 > temp_ch2_diff_x2:
+            begin_point = revers_point(ch2_x_posi_params[pre_index],output_width)
+            end_point = revers_point(ch2_x_posi_params[index],output_width)
+            ch2_x_posi_param = np.linspace(begin_point,end_point,ch2_interpre_num)
+        else:
+            ch2_x_posi_param = np.linspace(ch2_x_posi_params[pre_index],ch2_x_posi_params[index],ch2_interpre_num)
+
+        ch1_var = np.linspace(ch1_vars[pre_index],ch1_vars[index],ch1_interpre_num)
+        ch2_var = np.linspace(ch2_vars[pre_index],ch2_vars[index],ch2_interpre_num)
+        ch1_skew = np.linspace(ch1_skews[pre_index],ch1_skews[index],ch1_interpre_num)
+        ch2_skew = np.linspace(ch2_skews[pre_index],ch2_skews[index],ch2_interpre_num)
+        ch1_kurt = np.linspace(ch1_kurts[pre_index],ch1_kurts[index],ch1_interpre_num)
+        ch2_kurt = np.linspace(ch2_kurts[pre_index],ch2_kurts[index],ch2_interpre_num)
+
+        ch1_r_index = np.power(ch1_x_index - np.tile(ch1_x_posi_param.reshape(1,1,ch1_interpre_num),(output_height,output_width,1)),2) + np.power(ch1_y_index - np.tile(ch1_y_posi_param.reshape(1,1,ch1_interpre_num),(output_height,output_width,1)),2)
+        ch2_r_index = np.power(ch2_x_index - np.tile(ch2_x_posi_param.reshape(1,1,ch2_interpre_num),(output_height,output_width,1)),2) + np.power(ch2_y_index - np.tile(ch2_y_posi_param.reshape(1,1,ch2_interpre_num),(output_height,output_width,1)),2)
+        
+        ch1_col_chara_max = np.max([ch1_var,ch1_skew,ch1_kurt],axis=0)
+        ch2_col_chara_max = np.max([ch2_var,ch2_skew,ch2_kurt],axis=0)
+        ch1_col_chara_min = np.min([ch1_var,ch1_skew,ch1_kurt],axis=0)
+        ch2_col_chara_min = np.min([ch2_var,ch2_skew,ch2_kurt],axis=0)
+        
+        ch1_multi_r = np.zeros_like(ch1_var)
+        ch1_multi_g = np.zeros_like(ch1_kurt)
+        ch1_multi_b = np.zeros_like(ch1_skew)
+        excep_index = ch1_col_chara_max != ch1_col_chara_min
+        ch1_multi_r[~excep_index] = 1
+        ch1_multi_g[~excep_index] = 1
+        ch1_multi_b[~excep_index] = 1
+        ch1_multi_r[excep_index] = (ch1_var[excep_index] - ch1_col_chara_min[excep_index])/(ch1_col_chara_max[excep_index] - ch1_col_chara_min[excep_index]) /2 + 0.5
+        ch1_multi_g[excep_index] = (ch1_kurt[excep_index] - ch1_col_chara_min[excep_index])/(ch1_col_chara_max[excep_index] - ch1_col_chara_min[excep_index]) /2 + 0.5
+        ch1_multi_b[excep_index] = (ch1_skew[excep_index] - ch1_col_chara_min[excep_index])/(ch1_col_chara_max[excep_index] - ch1_col_chara_min[excep_index]) /2 + 0.5
+
+        ch2_multi_r = np.zeros_like(ch2_var)
+        ch2_multi_g = np.zeros_like(ch2_kurt)
+        ch2_multi_b = np.zeros_like(ch2_skew)
+        excep_index = ch2_col_chara_max != ch2_col_chara_min
+        ch2_multi_r[~excep_index] = 1
+        ch2_multi_g[~excep_index] = 1
+        ch2_multi_b[~excep_index] = 1
+        ch2_multi_r[excep_index] = (ch2_var[excep_index] - ch2_col_chara_min[excep_index])/(ch2_col_chara_max[excep_index] - ch2_col_chara_min[excep_index]) /2 + 0.5
+        ch2_multi_g[excep_index] = (ch2_kurt[excep_index] - ch2_col_chara_min[excep_index])/(ch2_col_chara_max[excep_index] - ch2_col_chara_min[excep_index]) /2 + 0.5
+        ch2_multi_b[excep_index] = (ch2_skew[excep_index] - ch2_col_chara_min[excep_index])/(ch2_col_chara_max[excep_index] - ch2_col_chara_min[excep_index]) /2 + 0.5
+
+
+        ch1_data_r = np.max(np.exp(-ch1_r_index/np.tile(np.power(2*ch1_size_param*ch1_multi_r,2),(output_height,output_width,1))),axis=2)
+        ch2_data_r = np.max(np.exp(-ch2_r_index/np.tile(np.power(2*ch2_size_param*ch2_multi_r,2),(output_height,output_width,1))),axis=2)
+        ch1_data_g = np.max(np.exp(-ch1_r_index/np.tile(np.power(2*ch1_size_param*ch1_multi_g,2),(output_height,output_width,1))),axis=2)
+        ch2_data_g = np.max(np.exp(-ch2_r_index/np.tile(np.power(2*ch2_size_param*ch2_multi_g,2),(output_height,output_width,1))),axis=2)
+        ch1_data_b = np.max(np.exp(-ch1_r_index/np.tile(np.power(2*ch1_size_param*ch1_multi_b,2),(output_height,output_width,1))),axis=2)
+        ch2_data_b = np.max(np.exp(-ch2_r_index/np.tile(np.power(2*ch2_size_param*ch2_multi_b,2),(output_height,output_width,1))),axis=2)
+
+       
+        img_data_r = np.zeros_like(ch1_data_r)
+        img_data_g = np.zeros_like(ch1_data_g)
+        img_data_b = np.zeros_like(ch1_data_b)
+
+        img_data_r[ch1_data_r > ch2_data_r] = ch1_data_r[ch1_data_r > ch2_data_r]
+        img_data_r[ch1_data_r <= ch2_data_r] = ch2_data_r[ch1_data_r <= ch2_data_r]
+        img_data_g[ch1_data_g > ch2_data_g] = ch1_data_g[ch1_data_g > ch2_data_g]
+        img_data_g[ch1_data_g <= ch2_data_g] = ch2_data_g[ch1_data_g <= ch2_data_g]
+        img_data_b[ch1_data_b > ch2_data_b] = ch1_data_b[ch1_data_b > ch2_data_b]
+        img_data_b[ch1_data_b <= ch2_data_b] = ch2_data_b[ch1_data_b <= ch2_data_b]
+
+        pre_flames_r[1:,:,:] = pre_flames_r[0:-1,:,:]
+        pre_flames_r[0,:,:] = img_data_r
+        pre_flames_g[1:,:,:] = pre_flames_g[0:-1,:,:]
+        pre_flames_g[0,:,:] = img_data_g
+        pre_flames_b[1:,:,:] = pre_flames_b[0:-1,:,:]
+        pre_flames_b[0,:,:] = img_data_b
+
+
+        num_of_pre = pre_flames_r.shape[0]
+        
+        write_flames_r = np.zeros_like(pre_flames_r)
+        write_flames_g = np.zeros_like(pre_flames_g)
+        write_flames_b = np.zeros_like(pre_flames_b)
+        
+        for num,(pre_flame_r,pre_flame_g,pre_flame_b) in enumerate(zip(pre_flames_r,pre_flames_g,pre_flames_b)):
+            multi = 1-num/num_of_pre
+            write_flames_r[num] = pre_flame_r*multi
+            write_flames_g[num] = pre_flame_g*multi
+            write_flames_b[num] = pre_flame_b*multi
+        
+        frame_r = np.uint8(np.max(write_flames_r,axis=0)[::-1,:]*255)
+        frame_g = np.uint8(np.max(write_flames_g,axis=0)[::-1,:]*255)
+        frame_b = np.uint8(np.max(write_flames_b,axis=0)[::-1,:]*255)
+        
+        frame = np.stack([frame_r,frame_g,frame_b],axis=2)
+        img = Image.fromarray(frame)
+        img.save(img_output_folder+str(index).zfill(file_num_zfill)+'.jpg')
+
+
+def min_max_Normalization(array_1D):
+    if np.min(array_1D) == np.max(array_1D):
+        output_data = np.zeros_like(array_1D)
+    else:
+        output_data = (array_1D - np.min(array_1D))/(np.max(array_1D) - np.min(array_1D))
+    return output_data    
+
+def revers_point(point,width):
+    if width/2 < point:
+        output = -width/2 + point
+    else:
+        output = width/2 + point
+    return output
+
+def lowpass(x, samplerate, fp, fs, gpass, gstop):
+    fn = samplerate / 2   #ナイキスト周波数
+    wp = fp / fn  #ナイキスト周波数で通過域端周波数を正規化
+    ws = fs / fn  #ナイキスト周波数で阻止域端周波数を正規化
+
+    N, Wn = signal.buttord(wp, ws, gpass, gstop)  #オーダーとバターワースの正規化周波数を計算
+    b, a = signal.butter(N, Wn, "low")            #フィルタ伝達関数の分子と分母を計算
+    y = signal.filtfilt(b, a, x)                  #信号に対してフィルタをかける
+    return y  
+
+def main():
+    wave_data_file_name = r"test_stereo_diff.wav"
+    wave_data_folder = r"test_data\\"
+    img_output_folder = r"python\\temp_file\\"
+    fps = 30
+    #au_display_sample_num = 1024*32
+    au_display_sample_num = int(44100*0.8)
+    delay_time = 0.5
+    display_freq_max = 1500
+    #output_width = 1280
+    #output_height = 720
+    #output_width = 640
+    #output_height = 360
+    #output_width = 640
+    #output_height = 260
+    output_width = 160
+    output_height = 120
+    file_num_zfill = 10
+
+    make_frame_cir(wave_data_file_name,
+                       wave_data_folder,
+                       img_output_folder,
+                       fps,
+                       au_display_sample_num,
+                       display_freq_max,
+                       delay_time,
+                       output_width,
+                       output_height,
+                       file_num_zfill)
+    
+if __name__ == "__main__":   
+    main()
+
