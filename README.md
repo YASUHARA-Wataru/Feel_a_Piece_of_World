@@ -11,7 +11,7 @@ personal work project
   全体的な説明は、[document/Audio_visualization.md](document/Audio_visualization.md)に記載。
 
 # License
-MIT
+MIT license
 
 # mail adress
 [click mail link(連絡先)](<mailto:yasuhara.wataru.personal.work@gmail.com>)
