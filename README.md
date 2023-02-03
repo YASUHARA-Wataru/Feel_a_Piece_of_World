@@ -1,4 +1,4 @@
-# Feel_a_Piece_of_Wrold
+# Feel_a_Piece_of_World
 personal work project
 ## Projects
 - 基底抽出相関最小法(base extract correlation minimum method)  
