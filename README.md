@@ -10,6 +10,11 @@ personal work project
   詳細は、初期位相は、[document/Quadrature_detection_memo.md](document/Quadrature_detection_memo.md)。
   全体的な説明は、[document/Audio_visualization.md](document/Audio_visualization.md)に記載。
 
+- 人工知能地図
+  人工知能の分野をわかりやすく理解するための図を作成するプロジェクト。  
+  ひな形のみ用意しています。  
+  [document/AI_map.md](document/AI_map.md)  
+
 # License
 MIT license
 
